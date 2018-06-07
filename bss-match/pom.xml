@@ -1,0 +1,48 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.yingu</groupId>
+	<artifactId>bss-match</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>bss-match</name>
+	<modules>
+		<module>bss-match-core-api</module>
+		<module>bss-match-core-service</module>
+		<module>bss-match-sys-api</module>
+		<module>bss-match-sys-service</module>
+		<module>bss-match-sys-web</module>
+		<module>bss-match-common</module>
+		<module>bss-match-schedule-api</module>
+		<module>bss-match-schedule-service</module>
+		<module>bss-match-octopus</module>
+		<module>bss-match-octopus-api</module>
+	</modules>
+
+	<!-- <distributionManagement>
+		<repository>
+			<id>nexus-releases</id>
+			<name>Nexus Release Repository</name>
+			<url>http://111.204.230.8:18080/nexus/content/repositories/releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>nexus-snapshots</id>
+			<name>Nexus Snapshot Repository</name>
+			<url>http://111.204.230.8:18080/nexus/content/repositories/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement> -->
+
+	<distributionManagement>
+		<repository>
+			<id>nexus-releases</id>
+			<name>Nexus Release Repository</name>
+			<url>http://maven.yingu.com/nexus/content/repositories/releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>nexus-snapshots</id>
+			<name>Nexus Snapshot Repository</name>
+			<url>http://maven.yingu.com/nexus/content/repositories/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+</project>

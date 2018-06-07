@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yingu.match.sys.dao.MsgLogMapper" >
+  <resultMap id="BaseResultMap" type="com.yingu.match.sys.model.MsgLog" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="biz_id" property="bizId" jdbcType="VARCHAR" />
+    <result column="biz_system" property="bizSystem" jdbcType="VARCHAR" />
+    <result column="invoke_time_millis" property="invokeTimeMillis" jdbcType="BIGINT" />
+    <result column="mseconds" property="mseconds" jdbcType="BIGINT" />
+    <result column="provider_name" property="providerName" jdbcType="VARCHAR" />
+    <result column="req_time" property="reqTime" jdbcType="BIGINT" />
+    <result column="res_time" property="resTime" jdbcType="BIGINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="ret_code" property="retCode" jdbcType="VARCHAR" />
+    <result column="ret_info" property="retInfo" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.yingu.match.sys.model.MsgLogWithBLOBs" extends="BaseResultMap" >
+    <result column="reqmsg" property="reqmsg" jdbcType="LONGVARCHAR" />
+    <result column="resmsg" property="resmsg" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, biz_id, biz_system, invoke_time_millis, mseconds, provider_name, req_time, res_time, 
+    create_time, ret_code, ret_info
+  </sql>
+  <sql id="Blob_Column_List" >
+    reqmsg, resmsg
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+    select
+    <include refid="Blob_Column_List" />
+    from sys_msg_log
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from sys_msg_log
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.yingu.match.sys.model.MsgLogWithBLOBs" useGeneratedKeys="true" keyProperty="id" >
+    insert into sys_msg_log (biz_id, biz_system, invoke_time_millis, 
+      mseconds, provider_name, req_time, 
+      res_time, create_time, ret_code, 
+      ret_info, reqmsg, resmsg
+      )
+    values (#{bizId,jdbcType=VARCHAR}, #{bizSystem,jdbcType=VARCHAR}, #{invokeTimeMillis,jdbcType=BIGINT}, 
+      #{mseconds,jdbcType=BIGINT}, #{providerName,jdbcType=VARCHAR}, #{reqTime,jdbcType=BIGINT}, 
+      #{resTime,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{retCode,jdbcType=VARCHAR}, 
+      #{retInfo,jdbcType=VARCHAR}, #{reqmsg,jdbcType=LONGVARCHAR}, #{resmsg,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  
+  <select id="findTCountByT" resultType="java.lang.Integer"  parameterType="com.yingu.match.sys.model.MsgLogWithBLOBs">
+    select count(*)
+    from sys_msg_log 
+     where 1=1
+    <if test="bizId != null and bizId != ''">
+		and	 biz_id = #{bizId,jdbcType=VARCHAR}
+	</if>
+    <if test="providerName != null and providerName != ''">
+		and	 provider_name = #{providerName,jdbcType=VARCHAR}
+	</if>	
+  </select>
+  
+  <select id="findTByPage" parameterType="com.yingu.match.common.model.Page" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" />
+    from sys_msg_log
+    where 1=1
+    <if test="t.bizId!= null and t.bizId != ''">
+		and	biz_id = #{t.bizId,jdbcType=VARCHAR}
+	</if>
+    <if test="t.providerName!= null and t.providerName != ''">
+		and	provider_name = #{t.providerName,jdbcType=VARCHAR}
+	</if>	
+    order by id desc limit  #{first}, #{pageSize}
+  </select>  
+  
+</mapper>

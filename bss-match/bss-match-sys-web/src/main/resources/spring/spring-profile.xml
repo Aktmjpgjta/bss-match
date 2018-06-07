@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<beans profile="dev">
+		<context:property-placeholder location="classpath:config/dev-config-common.properties,classpath:config/dev-config.properties" />
+	</beans>
+	<beans profile="test">
+		<context:property-placeholder location="classpath:config/test-config-common.properties,classpath:config/test-config.properties" />
+	</beans>
+	<beans profile="pre">
+		<context:property-placeholder location="classpath:config/pre-config-common.properties,classpath:config/pre-config.properties" />
+	</beans>	
+	<beans profile="prod">
+		<context:property-placeholder location="classpath:config/prod-config-common.properties,classpath:config/prod-config.properties" />
+	</beans>
+
+</beans>

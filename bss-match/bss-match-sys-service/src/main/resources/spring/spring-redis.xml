@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context" 
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"  
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <property name="maxTotal" value="${redis.maxTotal}" />
+        <property name="minIdle" value="${redis.minIdle}" />
+        <property name="maxWaitMillis" value="${redis.maxWaitTime}" />
+        <property name="maxIdle" value="${redis.maxIdle}" />
+        <property name="testOnBorrow" value="${redis.testOnBorrow}" />
+        <property name="testOnReturn" value="true" />
+        <property name="testWhileIdle" value="true" />
+	</bean>
+	
+	<!-- 集群 -->
+    <bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory" p:usePool="true" p:password="${redis.password}">
+        <constructor-arg index="0" ref="redisClusterConfiguration"/>
+        <constructor-arg index="1" ref="poolConfig"></constructor-arg>
+    </bean>
+    
+    <bean id="clusterRedisNodes1" class="org.springframework.data.redis.connection.RedisNode">
+        <constructor-arg value="${redis.node1.host}"/>
+        <constructor-arg value="${redis.node1.port}" type="int"/>
+    </bean>
+    <bean id="clusterRedisNodes2" class="org.springframework.data.redis.connection.RedisNode">
+        <constructor-arg value="${redis.node2.host}"/>
+        <constructor-arg value="${redis.node2.port}" type="int"/>
+    </bean>
+    <bean id="clusterRedisNodes3" class="org.springframework.data.redis.connection.RedisNode">
+        <constructor-arg value="${redis.node3.host}"/>
+        <constructor-arg value="${redis.node3.port}" type="int"/>
+    </bean>
+    <bean id="clusterRedisNodes4" class="org.springframework.data.redis.connection.RedisNode">
+        <constructor-arg value="${redis.node4.host}"/>
+        <constructor-arg value="${redis.node4.port}" type="int"/>
+    </bean>
+    <bean id="clusterRedisNodes5" class="org.springframework.data.redis.connection.RedisNode">
+        <constructor-arg value="${redis.node5.host}"/>
+        <constructor-arg value="${redis.node5.port}" type="int"/>
+    </bean>
+    <bean id="clusterRedisNodes6" class="org.springframework.data.redis.connection.RedisNode">
+        <constructor-arg value="${redis.node6.host}"/>
+        <constructor-arg value="${redis.node6.port}" type="int"/>
+    </bean>
+
+    <bean id="redisClusterConfiguration"
+          class="org.springframework.data.redis.connection.RedisClusterConfiguration">
+        <property name="maxRedirects" value="3">
+        </property>
+        <property name="clusterNodes">
+            <set>
+                <ref bean="clusterRedisNodes1"/>
+                <ref bean="clusterRedisNodes2"/>
+                <ref bean="clusterRedisNodes3"/>
+                <ref bean="clusterRedisNodes4"/>
+                <ref bean="clusterRedisNodes5"/>
+                <ref bean="clusterRedisNodes6"/>
+            </set>
+        </property>
+    </bean>
+	
+	<bean id="redisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">  
+        <property name="connectionFactory"   ref="jedisConnectionFactory" />  
+        <property name="keySerializer">
+			<bean class="org.springframework.data.redis.serializer.StringRedisSerializer"></bean>
+		</property>
+		<property name="valueSerializer">
+			<bean class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer" />
+       </property>
+    </bean>
+
+	<bean class="com.yingu.match.common.mybatis.RedisCacheTransfer">
+	    <property name="redisTemplate" ref="redisTemplate"/>
+	    <property name="expire" value="${mybatis_redis_cache}"/>
+	</bean>
+  
+</beans>

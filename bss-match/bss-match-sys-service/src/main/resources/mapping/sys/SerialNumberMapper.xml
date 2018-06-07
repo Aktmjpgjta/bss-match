@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yingu.match.sys.dao.SerialNumberMapper" >
+  <resultMap id="BaseResultMap" type="com.yingu.match.sys.model.SerialNumber" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="sn_name" property="snName" jdbcType="VARCHAR" />
+    <result column="sn_key" property="snKey" jdbcType="VARCHAR" />
+    <result column="sn_type" property="snType" jdbcType="INTEGER" />
+    <result column="curr_range" property="currRange" jdbcType="VARCHAR" />
+    <result column="next_num" property="nextNum" jdbcType="BIGINT" />
+    <result column="pool_size" property="poolSize" jdbcType="INTEGER" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="MODIFY_TIME" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="sortidx" property="sortidx" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, sn_key, sn_type, curr_range, next_num, pool_size, CREATE_TIME, MODIFY_TIME, sortidx, sn_name
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_serial_number
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" >
+    delete from sys_serial_number
+    where id in
+    	<foreach item="id" collection="array" open="(" separator="," close=")">  
+			#{id}  
+		</foreach>  
+  </delete>
+  
+  <insert id="insert" parameterType="com.yingu.match.sys.model.SerialNumber" useGeneratedKeys="true" keyProperty="id" >
+    insert into sys_serial_number (sn_key, sn_type, curr_range, 
+      next_num, pool_size, CREATE_TIME, sn_name, 
+      MODIFY_TIME, sortidx)
+    values (#{snKey,jdbcType=VARCHAR}, #{snType,jdbcType=INTEGER}, #{currRange,jdbcType=VARCHAR}, 
+      #{nextNum,jdbcType=BIGINT}, #{poolSize,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{snName,jdbcType=VARCHAR}, 
+      #{modifyTime,jdbcType=TIMESTAMP}, #{sortidx,jdbcType=BIGINT})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.yingu.match.sys.model.SerialNumber" >
+    update sys_serial_number
+    set sn_key = #{snKey,jdbcType=VARCHAR},
+      sn_type = #{snType,jdbcType=INTEGER},
+      curr_range = #{currRange,jdbcType=VARCHAR},
+      next_num = #{nextNum,jdbcType=BIGINT},
+      pool_size = #{poolSize,jdbcType=INTEGER},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      MODIFY_TIME = #{modifyTime,jdbcType=TIMESTAMP},
+      sortidx = #{sortidx,jdbcType=BIGINT},
+      sn_name = #{snName,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="findBySnKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" /> 
+    from sys_serial_number
+    where sn_key = #{snKey,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="findTCountByT" resultType="java.lang.Integer"  parameterType="com.yingu.match.sys.model.SerialNumber">
+    select count(*)
+    from sys_serial_number 
+     where 1=1
+    <if test="snKey != null and snKey != ''">
+		and	 sn_key like CONCAT('%', #{snKey,jdbcType=VARCHAR}, '%')
+	</if>
+  </select>
+  
+  <select id="findTByPage" parameterType="com.yingu.match.common.model.Page" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" />
+    from sys_serial_number
+    where 1=1
+    <if test="t.snKey!= null and t.snKey != ''">
+		and	sn_key like CONCAT('%', #{t.snKey,jdbcType=VARCHAR}, '%')
+	</if>
+    limit  #{first}, #{pageSize}
+  </select>
+  
+</mapper>

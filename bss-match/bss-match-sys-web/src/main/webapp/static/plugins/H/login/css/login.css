@@ -1,0 +1,32 @@
+.valcode{
+	position: relative;
+}
+.valcode label{
+	margin-left: -114px;
+}
+.valcode input{
+	width:100px
+}
+.valcode .img_div{
+	position: absolute;
+	left: 193px; 
+	top: 28px;
+}
+.username-div{
+	    width: 310px;
+    padding-top: 5px;
+    height: 30px;
+    color: #fff;
+    float: left;
+    border: 1px solid #49657a;
+	background: #0f2b41 url(../../img/lm_loginIcons.png) no-repeat 272px -102px;
+}
+#ff{
+	width: 300px;
+    height: auto;
+    overflow: hidden;
+    margin: 10% auto 0 auto;
+    padding: 40px;
+    box-shadow: 0 -15px 30px #0d957a;
+    border-radius: 32px;
+}

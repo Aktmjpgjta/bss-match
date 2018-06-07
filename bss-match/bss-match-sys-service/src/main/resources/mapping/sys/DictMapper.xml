@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.yingu.match.sys.dao.DictMapper" >
+<cache type="com.yingu.match.common.mybatis.RedisCache" />
+  <resultMap id="BaseResultMap" type="com.yingu.match.sys.model.Dict" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="path" property="path" jdbcType="VARCHAR" />
+    <result column="pid" property="pid" jdbcType="BIGINT" />
+    <result column="leaf" property="leaf" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="sortidx" property="sortidx" jdbcType="BIGINT" />
+    <result column="version" property="version" jdbcType="INTEGER" />
+	<result column="value1" jdbcType="VARCHAR" property="value1" />
+    <result column="value2" jdbcType="VARCHAR" property="value2" />
+    <result column="value3" jdbcType="VARCHAR" property="value3" />
+    <result column="value4" jdbcType="VARCHAR" property="value4" />
+    <result column="value5" jdbcType="VARCHAR" property="value5" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, code, name, path, pid, leaf, create_time, modify_time, sortidx, version, value1, 
+    value2, value3, value4, value5, remark, status
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from sys_dict
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from sys_dict
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" keyProperty="id" parameterType="com.yingu.match.sys.model.Dict" useGeneratedKeys="true">
+    insert into sys_dict (code, name, path, 
+      pid, leaf, create_time, 
+      modify_time, sortidx, version, 
+      value1, value2, value3, 
+      value4, value5, remark, 
+      status)
+    values (#{code,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{path,jdbcType=VARCHAR}, 
+      #{pid,jdbcType=BIGINT}, #{leaf,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{modifyTime,jdbcType=TIMESTAMP}, #{sortidx,jdbcType=BIGINT}, #{version,jdbcType=INTEGER}, 
+      #{value1,jdbcType=VARCHAR}, #{value2,jdbcType=VARCHAR}, #{value3,jdbcType=VARCHAR}, 
+      #{value4,jdbcType=VARCHAR}, #{value5,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER})
+  </insert>
+  
+  <update id="updateByPrimaryKey" parameterType="com.yingu.match.sys.model.Dict">
+    update sys_dict
+    set code = #{code,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      path = #{path,jdbcType=VARCHAR},
+      pid = #{pid,jdbcType=BIGINT},
+      leaf = #{leaf,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      sortidx = #{sortidx,jdbcType=BIGINT},
+      version = #{version,jdbcType=INTEGER},
+      value1 = #{value1,jdbcType=VARCHAR},
+      value2 = #{value2,jdbcType=VARCHAR},
+      value3 = #{value3,jdbcType=VARCHAR},
+      value4 = #{value4,jdbcType=VARCHAR},
+      value5 = #{value5,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="findTCountByT" resultType="java.lang.Integer"  parameterType="com.yingu.match.sys.model.Dict" >
+    select count(*)
+    from sys_dict 
+    where 1=1
+     <if test="name!= null and name != ''">
+		and	 name like CONCAT('%', #{name,jdbcType=VARCHAR}, '%')
+	</if>
+  </select>
+  <select id="findTByT" parameterType="com.yingu.match.sys.model.Dict" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" /> 
+    from sys_dict
+    where 1=1
+    <if test="name!= null and name != ''">
+		and	 name like CONCAT('%', #{name,jdbcType=VARCHAR}, '%')
+	</if>
+	<if test="path!= null and path != ''">
+		and path = #{path,jdbcType=VARCHAR}
+	</if>
+	<if test="pid!= null and pid != ''">
+		and pid = #{pid,jdbcType=BIGINT}
+	</if>
+	<if test="status!= null and status != ''">
+		and status = #{status,jdbcType=INTEGER}
+	</if>	
+  </select>
+  
+   <select id="findTByPage" parameterType="com.yingu.match.common.model.Page" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" /> 
+    from sys_dict
+    where 1=1
+    <if test="t.name!= null and t.name != ''">
+		and	 name like CONCAT('%', #{t.name,jdbcType=VARCHAR}, '%')
+	</if>
+	<if test="t.path!= null and t.path != ''">
+		and path = #{t.path,jdbcType=VARCHAR}
+	</if>
+	<if test="t.pid!= null and t.pid != ''">
+		and pid = #{t.pid,jdbcType=BIGINT}
+	</if>
+	limit  #{first}, #{pageSize}
+  </select>
+  <select id="findDictByPathLike" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" /> 
+    from sys_dict
+    where path like CONCAT('', #{path,jdbcType=VARCHAR}, '%')
+  </select>
+  
+  <delete id="deleteByPathLike" parameterType="java.lang.String" >
+    delete from sys_dict
+    where path like CONCAT('', #{path,jdbcType=VARCHAR}, '%')
+  </delete>
+  
+</mapper>
